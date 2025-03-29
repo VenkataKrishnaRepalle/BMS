@@ -56,7 +56,7 @@
 
         <sql>
             ALTER TABLE bill_extra
-                ADD CONSTRAINT operation_check CHECK ( operation = "ADDITION" or operation = "DEDUCTION" )
+                ADD CONSTRAINT operation_check CHECK ( operation = 'ADDITION' or operation = 'DEDUCTION' )
         </sql>
         <createTable tableName="result">
             <column name="uuid" type="${uuid_type}">

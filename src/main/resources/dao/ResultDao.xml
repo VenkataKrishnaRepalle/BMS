@@ -11,7 +11,7 @@
         <result property="bagsAmount" column="bags_amount"/>
         <result property="kgsAmount" column="kgs_amount"/>
         <result property="finalAmount" column="final_amount"/>
-        <result property="total" column="total"/>
+        <result property="total" column="total_amount"/>
         <result property="createdTime" column="created_time"/>
         <result property="updatedTime" column="updated_time"/>
     </resultMap>
@@ -29,7 +29,7 @@
     </select>
 
     <insert id="insert" flushCache="true">
-        INSERT INTO result(uuid, bill_uuid, bags, kgs, bags_amount, kgs_amount, final_amount, total, created_time,
+        INSERT INTO result(uuid, bill_uuid, bags, kgs, bags_amount, kgs_amount, final_amount, total_amount, created_time,
                            updated_time)
         VALUES (#{result.uuid}, #{result.billUuid}, #{result.bags}, #{result.kgs}, #{result.bagsAmount},
                 #{result.kgsAmount}, #{result.finalAmount}, #{result.total}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
@@ -43,7 +43,7 @@
             bags_amount  = #{result.bagsAmount},
             kgs_amount   = #{result.kgsAmount},
             final_amount = #{result.finalAmount},
-            total        = #{result.total},
+            total_amount = #{result.total},
             updated_time = CURRENT_TIMESTAMP
         where uuid = #{result.uuid}
     </update>
