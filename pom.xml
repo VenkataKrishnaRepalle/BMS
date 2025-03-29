@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>BMS</artifactId>
+    <artifactId>bms-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>BMS</name>
-    <description>BMS</description>
+    <description>bms-api</description>
     <properties>
         <java.version>17</java.version>
         <project-lombok.version>0.2.0</project-lombok.version>

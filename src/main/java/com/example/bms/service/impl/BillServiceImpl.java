@@ -57,6 +57,7 @@ public class BillServiceImpl implements BillService {
         List<BillExtra> savedBillExtras = new ArrayList<>();
         if (billExtras != null) {
             for (var billExtra : billExtras) {
+                billExtra.setUuid(UUID.randomUUID());
                 billExtra.setBillUuid(bill.getUuid());
                 savedBillExtras.add(insertBillExtra(billExtra));
                 log.info("BillServiceImpl - Add Bill : Bill extra saved - {}", billExtra);
@@ -118,10 +119,10 @@ public class BillServiceImpl implements BillService {
         var result = resultDao.getByBillId(billId);
         if (billExtraDto != null) {
             for (var billExtra : billExtraDto) {
+                billExtra.setUuid(UUID.randomUUID());
                 billExtra.setBillUuid(billId);
                 billExtra.setCreatedTime(Instant.now());
                 billExtra.setUpdatedTime(Instant.now());
-
                 var savedBillExtra = insertBillExtra(billExtra);
                 log.info("BillServiceImpl - Add Charges : Bill extra saved - {}", savedBillExtra);
             }
@@ -151,13 +152,12 @@ public class BillServiceImpl implements BillService {
     @Override
     @Transactional
     public BillResponseDto editCharges(UUID billId, UUID billExtraId, BillExtra billExtraDto) {
-        if (!billId.equals(billExtraDto.getUuid())) {
+        if (!billId.equals(billExtraDto.getBillUuid()) || !billExtraId.equals(billExtraDto.getUuid())) {
             throw new InvalidInputException("INVALID_INPUT", "Invalid input of billId and Bill Extra");
         }
         var bill = get(billId);
         getBillExtraById(billExtraDto.getUuid());
         var result = getResultByBillId(billId);
-        billExtraDto.setUuid(billId);
 
         updateBillExtra(billExtraDto);
         log.info("BillServiceImpl - Edit Charges : Bill extra updated - {}", billExtraDto);
@@ -209,13 +209,11 @@ public class BillServiceImpl implements BillService {
 
         var bagsCost = bill.getPrice()
                 .multiply(BigDecimal.valueOf(totalBagsAfterDeductions));
-        var kgsCost = BigDecimal.valueOf(75)
-                .divide(bill.getPrice(), 2, RoundingMode.HALF_UP)
+        var kgsCost = bill.getPrice()
+                .divide(BigDecimal.valueOf(75), 2, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(totalKgsAfterDeductions));
 
         var finalAmount = bagsCost.add(kgsCost);
-        var total = calculateOverallBillAmount(bill.getUuid());
-
         var newResult = Result.builder()
                 .billUuid(bill.getUuid())
                 .bags(totalBagsAfterDeductions)
@@ -223,24 +221,23 @@ public class BillServiceImpl implements BillService {
                 .bagsAmount(bagsCost)
                 .kgsAmount(kgsCost)
                 .finalAmount(finalAmount)
-                .total(total)
+                .total(finalAmount)
                 .createdTime(Instant.now())
                 .updatedTime(Instant.now())
                 .build();
         if (result == null) {
             newResult.setUuid(UUID.randomUUID());
             resultDao.insert(newResult);
-        } else {
-            newResult.setUuid(result.getUuid());
-            resultDao.insert(newResult);
         }
+        newResult.setTotal(calculateOverallBillAmount(bill.getUuid()));
+        updateResult(newResult);
         return newResult;
     }
 
     private BigDecimal calculateOverallBillAmount(UUID billUuid) {
         get(billUuid);
-        var result = getResultByBillId(billUuid);
-        var total = Optional.of(result)
+        var result = resultDao.getByBillId(billUuid);
+        var total = Optional.ofNullable(result)
                 .map(Result::getFinalAmount)
                 .orElse(BigDecimal.ZERO);
         System.out.println(total);
