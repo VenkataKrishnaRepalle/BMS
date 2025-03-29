@@ -1,0 +1,98 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+    <changeSet id="1" author="repalle venkata krishna">
+        <createTable tableName="bill">
+            <column name="uuid" type="${uuid_type}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="bill_pk"/>
+            </column>
+            <column name="bags" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kgs" type="INTEGER" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="bill_extra">
+            <column name="uuid" type="${uuid_type}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="bill_extra_pk"/>
+            </column>
+            <column name="bill_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="operation" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="bill_extra" baseColumnNames="bill_uuid"
+                                 constraintName="bill_fk" deferrable="false"
+                                 initiallyDeferred="false" onUpdate="CASCADE" onDelete="CASCADE"
+                                 referencedTableName="bill" referencedColumnNames="uuid"/>
+
+        <sql>
+            ALTER TABLE bill_extra
+                ADD CONSTRAINT operation_check CHECK ( operation = "ADDITION" or operation = "DEDUCTION" )
+        </sql>
+        <createTable tableName="result">
+            <column name="uuid" type="${uuid_type}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="result_uuid"/>
+            </column>
+            <column name="bill_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bags" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kgs" type="INTEGER" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bags_amount" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kgs_amount" type="DECIMAL(10,2)" defaultValue="0.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="final_amount" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_amount" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="result" baseColumnNames="bill_uuid"
+                                 constraintName="bill_fk" initiallyDeferred="false"
+                                 deferrable="false" onDelete="CASCADE" onUpdate="CASCADE"
+                                 referencedTableName="bill" referencedColumnNames="uuid"/>
+    </changeSet>
+</databaseChangeLog>

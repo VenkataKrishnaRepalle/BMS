@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bms.dao.BillDao">
+    <resultMap id="billMap" type="com.example.bms.entity.Bill">
+        <id property="uuid" column="uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
+            typeHandler="com.example.bms.handler.UuidTypeHandler"/>
+        <result property="bags" column="bags"/>
+        <result property="kgs" column="kgs"/>
+        <result property="price" column="price"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
+    </resultMap>
+    <select id="getById" resultMap="billMap">
+        SELECT *
+        FROM bill
+        WHERE uuid = #{uuid}
+    </select>
+
+    <select id="getAll" resultMap="billMap">
+        SELECT *
+        FROM bill
+    </select>
+
+    <insert id="insert" flushCache="true">
+        INSERT INTO bill(uuid, bags, kgs, price, created_time, updated_time)
+        VALUES (#{bill.uuid}, #{bill.bags}, #{bill.kgs}, #{bill.price}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update" flushCache="true">
+        UPDATE bill
+        SET bags         = #{bill.bags},
+            kgs          = #{bill.bags},
+            price        = #{bill.price},
+            updated_time = CURRENT_TIMESTAMP
+        WHERE uuid = #{bill.uuid}
+    </update>
+
+    <delete id="delete" flushCache="true">
+        DELETE
+        FROM bill
+        WHERE uuid = #{uuid}
+    </delete>
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bms.dao.ResultDao">
+    <resultMap id="resultMap" type="com.example.bms.entity.Result">
+        <id property="uuid" column="uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
+            typeHandler="com.example.bms.handler.UuidTypeHandler"/>
+        <result property="billUuid" column="bill_uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
+                typeHandler="com.example.bms.handler.UuidTypeHandler"/>
+        <result property="bags" column="bags"/>
+        <result property="kgs" column="kgs"/>
+        <result property="bagsAmount" column="bags_amount"/>
+        <result property="kgsAmount" column="kgs_amount"/>
+        <result property="finalAmount" column="final_amount"/>
+        <result property="total" column="total"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
+    </resultMap>
+
+    <select id="getById" resultMap="resultMap">
+        SELECT *
+        FROM result
+        WHERE uuid = #{uuid}
+    </select>
+
+    <select id="getByBillId" resultMap="resultMap">
+        SELECT *
+        FROM result
+        WHERE bill_uuid = #{billUuid}
+    </select>
+
+    <insert id="insert" flushCache="true">
+        INSERT INTO result(uuid, bill_uuid, bags, kgs, bags_amount, kgs_amount, final_amount, total, created_time,
+                           updated_time)
+        VALUES (#{result.uuid}, #{result.billUuid}, #{result.bags}, #{result.kgs}, #{result.bagsAmount},
+                #{result.kgsAmount}, #{result.finalAmount}, #{result.total}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update" flushCache="true">
+        UPDATE result
+        SET bill_uuid    = #{result.billUuid},
+            bags         = #{result.bags},
+            kgs          = #{result.kgs},
+            bags_amount  = #{result.bagsAmount},
+            kgs_amount   = #{result.kgsAmount},
+            final_amount = #{result.finalAmount},
+            total        = #{result.total},
+            updated_time = CURRENT_TIMESTAMP
+        where uuid = #{result.uuid}
+    </update>
+
+    <delete id="delete" flushCache="true">
+        DELETE
+        FROM result
+        WHERE uuid = #{uuid}
+    </delete>
+</mapper>

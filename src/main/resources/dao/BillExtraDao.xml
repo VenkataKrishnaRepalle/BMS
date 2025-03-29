@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bms.dao.BillExtraDao">
+    <resultMap id="billExtraMap" type="com.example.bms.entity.BillExtra">
+        <id property="uuid" column="uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
+            typeHandler="com.example.bms.handler.UuidTypeHandler"/>
+        <result property="billUuid" column="bill_uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
+                typeHandler="com.example.bms.handler.UuidTypeHandler"/>
+        <result property="name" column="type"/>
+        <result property="date" column="date"/>
+        <result property="amount" column="amount"/>
+        <result property="operation" column="operation"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
+    </resultMap>
+
+    <select id="getById" resultMap="billExtraMap">
+        SELECT *
+        FROM bill_extra
+        WHERE uuid = #{uuid}
+    </select>
+
+    <select id="getByBillId" resultMap="billExtraMap">
+        SELECT *
+        FROM bill_extra
+        WHERE bill_uuid = #{billUuid}
+    </select>
+
+    <insert id="insert" flushCache="true">
+        INSERT INTO bill_extra(uuid, bill_uuid, name, date, amount, operation, created_time, updated_time)
+        VALUES (#{billExtra.uuid}, #{billExtra.billUuid}, #{billExtra.name}, #{billExtra.date}, #{billExtra.amount},
+                #{billExtra.operation}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update" flushCache="true">
+        UPDATE bill_extra
+        SET bill_uuid    = #{billExtra.billUuid},
+            name         = #{billExtra.name},
+            date         = #{billExtra.date},
+            amount       = #{billExtra.amount},
+            operation    = #{billExtra.operation},
+            updated_time = #{billExtra.updatedTime}
+        WHERE uuid = #{billExtra.uuid}
+    </update>
+
+    <delete id="delete" flushCache="true">
+        DELETE
+        FROM bill_extra
+        WHERE uuid = #{uuid}
+    </delete>
+</mapper>

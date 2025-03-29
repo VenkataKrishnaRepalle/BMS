@@ -1,11 +1,12 @@
 package com.example.bms.dto;
 
+import com.example.bms.entity.Bill;
+import com.example.bms.entity.BillExtra;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -13,12 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class AddBillRequestDto {
+    private Bill bill;
 
-    private Integer bags;
-
-    private Integer kgs;
-
-    private BigDecimal price;
-
-    private List<AddBillExtraRequestDto> additionalBills;
+    private List<BillExtra> billExtras;
 }

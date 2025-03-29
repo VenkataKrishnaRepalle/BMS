@@ -1,6 +1,6 @@
 package com.example.bms.entity;
 
-public enum BillExtraStatus {
+public enum BillExtraOperation {
     DEDUCTION,
     ADDITION
 }

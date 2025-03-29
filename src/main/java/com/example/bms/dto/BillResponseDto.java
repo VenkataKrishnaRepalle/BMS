@@ -1,14 +1,14 @@
 package com.example.bms.dto;
 
+import com.example.bms.entity.Bill;
+import com.example.bms.entity.BillExtra;
+import com.example.bms.entity.Result;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -16,17 +16,9 @@ import java.util.UUID;
 @Builder
 public class BillResponseDto {
 
-    private UUID uuid;
+    private Bill bill;
 
-    private Integer bags;
+    private List<BillExtra> billExtras;
 
-    private Integer kgs;
-
-    private BigDecimal price;
-
-    private List<AddBillExtraResponseDto> additionalBills;
-
-    private AddBillResultResponseDto result;
-
-    private Date createdTime;
+    private Result result;
 }
